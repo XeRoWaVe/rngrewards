@@ -1,8 +1,11 @@
-type Props = {};
+type Props = {
+  handleStart: () => void }
 
-const StartTimer = (props: Props) => {
+const StartTimer = ({handleStart}: Props) => {
+
+
   return (
-    <button {...props}>
+    <button onClick={handleStart} className="hover:">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

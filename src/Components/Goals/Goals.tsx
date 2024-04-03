@@ -2,14 +2,18 @@ import { useContext, useState } from "react";
 import Goal from "./Goal";
 import GoalsSettingsButton from "./GoalsSettingsButton";
 import { goalsSettingsContext } from "../../util";
+import { Reward } from "../../App";
+
+
 
 type Props = {
   goals: string[];
   setGoals: React.Dispatch<React.SetStateAction<string[]>>;
   setShowGoalsSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  setReward: React.Dispatch<React.SetStateAction<Reward>>
 };
 
-const Goals = ({ goals, setGoals, setShowGoalsSettings }: Props) => {
+const Goals = ({ goals, setGoals, setShowGoalsSettings, setReward }: Props) => {
   const goalsSettingsInfo: any = useContext(goalsSettingsContext);
   const [input, setInput] = useState("");
 
@@ -20,6 +24,23 @@ const Goals = ({ goals, setGoals, setShowGoalsSettings }: Props) => {
     localStorage.setItem("goals", JSON.stringify(removedStorage));
     setGoals(removedGoal);
   };
+
+  const completeGoal = (index: number) => {
+    const completedGoal = goals.filter((_, i) => i !== index);
+    const removedStorage = JSON.parse(localStorage.getItem("goals") || "");
+    removedStorage.splice(index, 1);
+    localStorage.setItem("goals", JSON.stringify(removedStorage));
+    setGoals(completedGoal);
+    randomizeDopamine()
+    setTimeout(() => {
+      setReward(null)
+    }, 5000)
+  }
+
+  const randomizeDopamine = () => {
+    const number = Math.floor(Math.random() * 100) + 1
+    return (number % 2 === 0) ? setReward(true) : setReward(false)
+}
 
   return (
     <div className="flex flex-col items-center">
@@ -44,7 +65,7 @@ const Goals = ({ goals, setGoals, setShowGoalsSettings }: Props) => {
             <div key={i} className="w-full m-2">
               <Goal goal={goal} />
               <button onClick={() => removeGoal(i)}>❌</button>
-              <button>✔</button>
+              <button onClick={() => completeGoal(i)}>✔</button>
             </div>
           ))
           .slice(0, goalsSettingsInfo.goalAmount)}

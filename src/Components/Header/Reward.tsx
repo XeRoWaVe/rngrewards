@@ -10,7 +10,7 @@ const Reward = ({ reward }: Props) => {
       ) : reward === false ? (
         <h1 className="text-red">NEXT TIME</h1>
       ) : (
-        ""
+        <h1><br></br></h1>
       )}
     </div>
   );

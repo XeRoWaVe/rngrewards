@@ -8,7 +8,7 @@ import GoalsSettings from "./Components/Goals/GoalsSettings";
 import TimerSettings from "./Components/Timer/TimerSettings";
 import { goalsSettingsContext, timerSettingsContext } from "./util";
 
-type Reward = true | false | null;
+export type Reward = true | false | null;
 
 function App() {
   const [goals, setGoals] = useState<string[]>([]);
@@ -19,7 +19,6 @@ function App() {
   const [goalAmount, setGoalAmount] = useState(1);
   const [reward, setReward] = useState<Reward>(null);
 
-  console.log(showGoalsSettings);
   useEffect(() => {
     // save goals to local storage when state gets updated
     if (goals.length > 0) localStorage.setItem("goals", JSON.stringify(goals));
@@ -59,6 +58,7 @@ function App() {
                   goals={goals}
                   setGoals={setGoals}
                   setShowGoalsSettings={setShowGoalsSettings}
+                  setReward={setReward}
                 />
               )}
             </goalsSettingsContext.Provider>
@@ -70,12 +70,13 @@ function App() {
                 breakMinutes: breakMinutes,
                 setWorkMinutes,
                 setBreakMinutes,
+                setShowTimerSettings
               }}
             >
               {showTimerSettings ? (
-                <TimerSettings setShowTimerSettings={setShowTimerSettings} />
+                <TimerSettings />
               ) : (
-                <Timer setShowTimerSettings={setShowTimerSettings} />
+                <Timer />
               )}
             </timerSettingsContext.Provider>
           </div>

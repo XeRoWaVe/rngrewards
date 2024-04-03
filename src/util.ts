@@ -5,6 +5,7 @@ type timerContext = {
   breakMinutes: number;
   setWorkMinutes: React.Dispatch<React.SetStateAction<number>>;
   setBreakMinutes: React.Dispatch<React.SetStateAction<number>>;
+  setShowTimerSettings: React.Dispatch<React.SetStateAction<boolean>>
 };
 
 type goalContext = {
@@ -12,5 +13,7 @@ type goalContext = {
   setGoalAmount: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export const timerSettingsContext = createContext<timerContext | null>(null);
-export const goalsSettingsContext = createContext<goalContext | null>(null);
+export const timerSettingsContext = createContext<timerContext>({workMinutes: 0, breakMinutes: 0, setWorkMinutes: () => {}, setBreakMinutes: () => {}, setShowTimerSettings: () => {}});
+export const goalsSettingsContext = createContext<goalContext>({goalAmount: 0, setGoalAmount: () => {}});
+
+

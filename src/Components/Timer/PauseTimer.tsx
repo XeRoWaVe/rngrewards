@@ -1,8 +1,10 @@
-type Props = {};
+type Props = {
+  handlePause: () => void
+};
 
-const PauseTimer = (props: Props) => {
+const PauseTimer = ({handlePause}: Props) => {
   return (
-    <button {...props}>
+    <button onClick={handlePause}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"
