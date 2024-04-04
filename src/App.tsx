@@ -4,18 +4,12 @@ import Reward from "./Components/Header/Reward";
 import Streak from "./Components/Header/Streak";
 import Timer from "./Components/Timer/Timer";
 import DarkMode from "./Components/Darkmode/DarkMode";
-import GoalsSettings from "./Components/Goals/GoalsSettings";
-import TimerSettings from "./Components/Timer/TimerSettings";
-import { goalsSettingsContext, timerSettingsContext } from "./util";
 
 export type Reward = true | false | null;
 
 function App() {
   const [goals, setGoals] = useState<string[]>([]);
   const [showGoalsSettings, setShowGoalsSettings] = useState(false);
-  const [showTimerSettings, setShowTimerSettings] = useState(false);
-  const [workMinutes, setWorkMinutes] = useState(45);
-  const [breakMinutes, setBreakMinutes] = useState(15);
   const [goalAmount, setGoalAmount] = useState(1);
   const [reward, setReward] = useState<Reward>(null);
 
@@ -48,37 +42,18 @@ function App() {
         </div>
         <div className="flex justify-center rounded-md w-full h-[590px]">
           <div className="w-full h-full border-2 border-black">
-            <goalsSettingsContext.Provider
-              value={{ goalAmount: goalAmount, setGoalAmount }}
-            >
-              {showGoalsSettings ? (
-                <GoalsSettings setShowGoalsSettings={setShowGoalsSettings} />
-              ) : (
                 <Goals
                   goals={goals}
                   setGoals={setGoals}
                   setShowGoalsSettings={setShowGoalsSettings}
+                  showGoalSettings={showGoalsSettings}
                   setReward={setReward}
+                  goalAmount={goalAmount}
+                  setGoalAmount={setGoalAmount}
                 />
-              )}
-            </goalsSettingsContext.Provider>
           </div>
           <div className="w-full h-full">
-            <timerSettingsContext.Provider
-              value={{
-                workMinutes: workMinutes,
-                breakMinutes: breakMinutes,
-                setWorkMinutes,
-                setBreakMinutes,
-                setShowTimerSettings
-              }}
-            >
-              {showTimerSettings ? (
-                <TimerSettings />
-              ) : (
                 <Timer />
-              )}
-            </timerSettingsContext.Provider>
           </div>
         </div>
         <div className="flex justify-center items-center">

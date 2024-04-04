@@ -1,15 +1,11 @@
-import { useContext } from "react";
-import { timerSettingsContext } from "../../util";
-
 type Props = {
-
+  setShowTimerSettings: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const TimerSettingsButton = ({}: Props) => {
-  const timerSettingsInfo = useContext<any>(timerSettingsContext)
+const TimerSettingsButton = ({setShowTimerSettings}: Props) => {
 
   const handleClick = () => {
-    timerSettingsInfo.setShowTimerSettings((k: any) => !k);
+    setShowTimerSettings((k: any) => !k);
   };
   return (
     <button onClick={handleClick} className="w-auto">

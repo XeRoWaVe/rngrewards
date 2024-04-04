@@ -1,42 +1,43 @@
-// import ReactSlider from "react-slider";
-import { timerSettingsContext } from "../../util";
-import { useContext} from "react";
-
 type Props = {
+  workMinutes: number
+  breakMinutes: number
+  setWorkMinutes: React.Dispatch<React.SetStateAction<number>>
+  setBreakMinutes: React.Dispatch<React.SetStateAction<number>>
+  setShowTimerSettings: React.Dispatch<React.SetStateAction<boolean>>
 };
 
-const TimerSettings = ({}: Props) => {
-  const timerSettingsInfo: any = useContext(timerSettingsContext);
+const TimerSettings = ({workMinutes, breakMinutes, setWorkMinutes, setBreakMinutes, setShowTimerSettings}: Props) => {
+
 
   const handleClick = () => {
-    timerSettingsInfo.setShowTimerSettings((k: any) => !k);
+    setShowTimerSettings((k: any) => !k);
   };
 
   return (
     <div className="w-full text-center">
       Timer Settings
       <label className="block">
-        Work {timerSettingsInfo.workMinutes} :00
+        Work {workMinutes} :00
         <input
           className=""
           type="range"
           min="1"
           max="90"
-          value={timerSettingsInfo.workMinutes}
+          value={workMinutes}
           onChange={(e) =>
-            timerSettingsInfo.setWorkMinutes(e.currentTarget.valueAsNumber)
+            setWorkMinutes(e.currentTarget.valueAsNumber)
           }
         />
       </label>
       <label className="block">
-        Break Minutes: {timerSettingsInfo.breakMinutes}:00
+        Break Minutes: {breakMinutes}:00
         <input
           type="range"
           min="1"
           max="5"
-          value={timerSettingsInfo.breakMinutes}
+          value={breakMinutes}
           onChange={(e) =>
-            timerSettingsInfo.setBreakMinutes(e.currentTarget.valueAsNumber)
+            setBreakMinutes(e.currentTarget.valueAsNumber)
           }
         />
       </label>

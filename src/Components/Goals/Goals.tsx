@@ -1,8 +1,8 @@
-import { useContext, useState } from "react";
+import { useState } from "react";
 import Goal from "./Goal";
 import GoalsSettingsButton from "./GoalsSettingsButton";
-import { goalsSettingsContext } from "../../util";
 import { Reward } from "../../App";
+import GoalsSettings from "./GoalsSettings";
 
 
 
@@ -11,10 +11,12 @@ type Props = {
   setGoals: React.Dispatch<React.SetStateAction<string[]>>;
   setShowGoalsSettings: React.Dispatch<React.SetStateAction<boolean>>;
   setReward: React.Dispatch<React.SetStateAction<Reward>>
+  goalAmount: number
+  setGoalAmount: React.Dispatch<React.SetStateAction<number>>
+  showGoalSettings: boolean
 };
 
-const Goals = ({ goals, setGoals, setShowGoalsSettings, setReward }: Props) => {
-  const goalsSettingsInfo: any = useContext(goalsSettingsContext);
+const Goals = ({ goals, setGoals, setShowGoalsSettings, setReward, goalAmount, setGoalAmount, showGoalSettings }: Props) => {
   const [input, setInput] = useState("");
 
   const removeGoal = (index: number) => {
@@ -43,36 +45,36 @@ const Goals = ({ goals, setGoals, setShowGoalsSettings, setReward }: Props) => {
 }
 
   return (
-    <div className="flex flex-col items-center">
-      <h1>Daily Goal list</h1>
-      <h2>Goal limit: {goalsSettingsInfo.goalAmount}</h2>
-      {(goals.length < goalsSettingsInfo.goalAmount) && <input
-        className="text-black m-2 w-fit"
-        type="text"
-        value={input}
-        placeholder="Enter goal here..."
-        onChange={(e) => setInput(e.currentTarget.value)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            setGoals((prev) => [...prev, input]);
-            setInput("");
-          }
-        }}
-      />}
-      {!!goals.length &&
-        goals
-          .map((goal, i) => (
-            <div key={i} className="w-full m-2">
-              <Goal goal={goal} />
-              <button onClick={() => removeGoal(i)}>❌</button>
-              <button onClick={() => completeGoal(i)}>✔</button>
-            </div>
-          ))
-          .slice(0, goalsSettingsInfo.goalAmount)}
-      <div>
-        <GoalsSettingsButton setShowGoalsSettings={setShowGoalsSettings} />
-      </div>
+    <>{showGoalSettings ? <GoalsSettings setShowGoalsSettings={setShowGoalsSettings} goalAmount={goalAmount} setGoalAmount={setGoalAmount} /> : <div className="flex flex-col items-center">
+    <h1>Daily Goal list</h1>
+    <h2>Goal limit: {goalAmount}</h2>
+    {(goals.length < goalAmount) && <input
+      className="text-black m-2 w-fit"
+      type="text"
+      value={input}
+      placeholder="Enter goal here..."
+      onChange={(e) => setInput(e.currentTarget.value)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          setGoals((prev) => [...prev, input]);
+          setInput("");
+        }
+      }}
+    />}
+    {!!goals.length &&
+      goals
+        .map((goal, i) => (
+          <div key={i} className="w-full m-2">
+            <Goal goal={goal} />
+            <button onClick={() => removeGoal(i)}>❌</button>
+            <button onClick={() => completeGoal(i)}>✔</button>
+          </div>
+        ))
+        .slice(0, goalAmount)}
+    <div>
+      <GoalsSettingsButton setShowGoalsSettings={setShowGoalsSettings} />
     </div>
+  </div>}</>
   );
 };
 

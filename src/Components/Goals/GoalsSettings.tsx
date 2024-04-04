@@ -3,10 +3,11 @@ import { goalsSettingsContext } from "../../util";
 
 type Props = {
   setShowGoalsSettings: React.Dispatch<React.SetStateAction<boolean>>;
+  goalAmount: number
+  setGoalAmount: React.Dispatch<React.SetStateAction<number>>
 };
 
-const GoalsSettings = ({ setShowGoalsSettings }: Props) => {
-  const goalSettingsInfo: any = useContext(goalsSettingsContext);
+const GoalsSettings = ({ setShowGoalsSettings, goalAmount, setGoalAmount }: Props) => {
 
   const handleClick = () => {
     setShowGoalsSettings((k) => !k);
@@ -16,14 +17,14 @@ const GoalsSettings = ({ setShowGoalsSettings }: Props) => {
     <div className="w-full h-4/6 flex flex-col items-center">
       Goal Settings
       <label>
-        Daily Goal Limit: {goalSettingsInfo.goalAmount}
+        Daily Goal Limit: {goalAmount}
         <input
           type="range"
           min="1"
           max="10"
-          value={goalSettingsInfo.goalAmount}
+          value={goalAmount}
           onChange={(e) =>
-            goalSettingsInfo.setGoalAmount(e.currentTarget.valueAsNumber)
+            setGoalAmount(e.currentTarget.valueAsNumber)
           }
         />
       </label>
