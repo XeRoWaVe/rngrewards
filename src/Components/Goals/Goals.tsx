@@ -14,9 +14,11 @@ type Props = {
   goalAmount: number
   setGoalAmount: React.Dispatch<React.SetStateAction<number>>
   showGoalSettings: boolean
+  setStreak: React.Dispatch<React.SetStateAction<number>>
+  streak: number
 };
 
-const Goals = ({ goals, setGoals, setShowGoalsSettings, setReward, goalAmount, setGoalAmount, showGoalSettings }: Props) => {
+const Goals = ({ goals, setGoals, setShowGoalsSettings, setReward, goalAmount, setGoalAmount, showGoalSettings, setStreak, streak }: Props) => {
   const [input, setInput] = useState("");
 
   const removeGoal = (index: number) => {
@@ -29,10 +31,12 @@ const Goals = ({ goals, setGoals, setShowGoalsSettings, setReward, goalAmount, s
 
   const completeGoal = (index: number) => {
     const completedGoal = goals.filter((_, i) => i !== index);
-    const removedStorage = JSON.parse(localStorage.getItem("goals") || "");
-    removedStorage.splice(index, 1);
-    localStorage.setItem("goals", JSON.stringify(removedStorage));
+    const addStorage = JSON.parse(localStorage.getItem("goals") || "");
+    addStorage.splice(index, 1);
+    localStorage.setItem("goals", JSON.stringify(addStorage));
     setGoals(completedGoal);
+    setStreak(prev => prev + 1)
+    localStorage.setItem('streak', JSON.stringify(streak))
     randomizeDopamine()
     setTimeout(() => {
       setReward(null)
@@ -56,6 +60,7 @@ const Goals = ({ goals, setGoals, setShowGoalsSettings, setReward, goalAmount, s
       onChange={(e) => setInput(e.currentTarget.value)}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
+          if (input !== '')
           setGoals((prev) => [...prev, input]);
           setInput("");
         }

@@ -1,11 +1,10 @@
-import { useState, useEffect, useContext, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import StartTimer from "./StartTimer";
 import PauseTimer from "./PauseTimer";
 import ResetTimer from "./ResetTimer";
 import TimerSettingsButton from "./TimerSettingsButton";
-import { timerSettingsContext } from "../../util";
 import TimerSettings from "./TimerSettings";
 
 type Props = {}
@@ -68,22 +67,22 @@ const Timer = ({}: Props) => {
     setSecondsLeft(secondsLeftRef.current)
   }
   
-  const handleStart = () => {
+  const handleStart = useCallback(() => {
     setIsPaused(false)
     isPausedRef.current = false
-  }
+  }, [])
 
-  const handlePause = () => {
+  const handlePause = useCallback(() => {
     setIsPaused(true)
     isPausedRef.current = true
-  }
+  }, [])
 
-  const handleReset = () => {
+  const handleReset = useCallback(() => {
     setIsPaused(true)
     isPausedRef.current = true
     secondsLeftRef.current = workMinutes * 60
     setSecondsLeft(secondsLeftRef.current)
-  }
+  }, [])
 
   const totalSeconds = mode === 'work' 
   ? workMinutes * 60 

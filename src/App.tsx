@@ -12,6 +12,8 @@ function App() {
   const [showGoalsSettings, setShowGoalsSettings] = useState(false);
   const [goalAmount, setGoalAmount] = useState(1);
   const [reward, setReward] = useState<Reward>(null);
+  const [streak, setStreak] = useState(0)
+
 
   useEffect(() => {
     // save goals to local storage when state gets updated
@@ -29,6 +31,14 @@ function App() {
     }
   }, []);
 
+  useEffect(() => {
+    if (streak === 0) {
+      const savedStreak = Number(localStorage.getItem('streak') || '')
+      setStreak(savedStreak)
+    }
+    
+  },[])
+
   const clearLocalStorage = () => localStorage.clear(); // clear localstorage dev use only
 
   return (
@@ -37,7 +47,7 @@ function App() {
         <div className="flex justify-center border-black rounded-md border-2 relative">
           <Reward reward={reward} />
           <div className="absolute top-1 right-0">
-            <Streak />
+            <Streak streak={streak} />
           </div>
         </div>
         <div className="flex justify-center rounded-md w-full h-[590px]">
@@ -50,6 +60,8 @@ function App() {
                   setReward={setReward}
                   goalAmount={goalAmount}
                   setGoalAmount={setGoalAmount}
+                  setStreak={setStreak}
+                  streak={streak}
                 />
           </div>
           <div className="w-full h-full">
