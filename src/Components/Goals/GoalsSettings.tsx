@@ -1,6 +1,3 @@
-import { useContext } from "react";
-import { goalsSettingsContext } from "../../util";
-
 type Props = {
   setShowGoalsSettings: React.Dispatch<React.SetStateAction<boolean>>;
   goalAmount: number

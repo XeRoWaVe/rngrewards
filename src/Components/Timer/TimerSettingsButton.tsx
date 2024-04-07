@@ -8,7 +8,7 @@ const TimerSettingsButton = ({setShowTimerSettings}: Props) => {
     setShowTimerSettings((k: any) => !k);
   };
   return (
-    <button onClick={handleClick} className="w-auto">
+    <button onClick={handleClick} className="w-auto border-2 shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-4 active:shadow-inner hover:bg-[#7289da] active:border-2">
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 24 24"

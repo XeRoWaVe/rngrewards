@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef, useCallback, useContext, useMemo } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
 import StartTimer from "./StartTimer";
@@ -6,23 +6,17 @@ import PauseTimer from "./PauseTimer";
 import ResetTimer from "./ResetTimer";
 import TimerSettingsButton from "./TimerSettingsButton";
 import TimerSettings from "./TimerSettings";
-
+import { timerSettingsContext } from "../../util";
 type Props = {}
 
 type Modes = 'work' | 'break'
-
-const purple = '#600BDB';
-const silver = '#C0C0C0';
 
 const Timer = ({}: Props) => {
   const [isPaused, setIsPaused] = useState(true)
   const [mode, setMode] = useState<Modes>('work')
   const [secondsLeft, setSecondsLeft] = useState(0)
-  const [workMinutes, setWorkMinutes] = useState(45);
-  const [breakMinutes, setBreakMinutes] = useState(15);
+  const timerInfo = useContext(timerSettingsContext)
   const [showTimerSettings, setShowTimerSettings] = useState(false);
-
-
   const secondsLeftRef = useRef(secondsLeft)
   const isPausedRef = useRef(isPaused)
   const modeRef = useRef(mode)
@@ -33,7 +27,7 @@ const Timer = ({}: Props) => {
     
     const switchMode = () => {
       const nextMode = modeRef.current === 'work' ? 'break' : 'work'
-      const nextSeconds = (nextMode === 'work' ? workMinutes : breakMinutes) * 60
+      const nextSeconds = (nextMode === 'work' ? timerInfo.workMinutes : timerInfo.breakMinutes) * 60
 
       setMode(nextMode)
       modeRef.current = nextMode
@@ -42,7 +36,7 @@ const Timer = ({}: Props) => {
       secondsLeftRef.current = nextSeconds
     }
 
-    secondsLeftRef.current = workMinutes * 60
+    secondsLeftRef.current = timerInfo.workMinutes * 60
     setSecondsLeft(secondsLeftRef.current)
 
    const interval = setInterval(() => {
@@ -60,7 +54,7 @@ const Timer = ({}: Props) => {
 
     return () => clearInterval(interval)
 
-  }, [])
+  }, [timerInfo])
 
   const tick = () => { // lowers seconds to count timer down
     secondsLeftRef.current--
@@ -80,15 +74,15 @@ const Timer = ({}: Props) => {
   const handleReset = useCallback(() => {
     setIsPaused(true)
     isPausedRef.current = true
-    secondsLeftRef.current = workMinutes * 60
+    secondsLeftRef.current = timerInfo.workMinutes * 60
     setSecondsLeft(secondsLeftRef.current)
   }, [])
 
   const totalSeconds = mode === 'work' 
-  ? workMinutes * 60 
-  : breakMinutes * 60
+  ? timerInfo.workMinutes * 60 
+  : timerInfo.breakMinutes * 60
 
-  const percentage = Math.round(secondsLeft / totalSeconds * 100) 
+  const percentage = useMemo(() => Math.round(secondsLeft / totalSeconds * 100), [secondsLeft, totalSeconds]) 
 
   const minutes = Math.floor(secondsLeft / 60)
   let seconds: string | number = secondsLeft % 60
@@ -96,12 +90,13 @@ const Timer = ({}: Props) => {
 
   return (
    <>
-    {!!showTimerSettings ? <TimerSettings breakMinutes={breakMinutes} workMinutes={workMinutes} setShowTimerSettings={setShowTimerSettings} setBreakMinutes={setBreakMinutes} setWorkMinutes={setWorkMinutes} /> : <div className="flex flex-col items-center border-2 border-black ">
+    {!!showTimerSettings ? <TimerSettings setShowTimerSettings={setShowTimerSettings} /> : <div className="flex  p-4 flex-col items-center rounded-2xl border-2 border-black ">
       <span>Timer</span>
-      <CircularProgressbar value={percentage} text={`${minutes}:${seconds}`} styles={buildStyles({
+      <CircularProgressbar value={percentage} text={`${minutes}:${seconds}`} className="text-[#7289da]" styles={buildStyles({
         textColor:'',
-        pathColor:mode === 'work' ? purple : silver,
-        trailColor:'rgba(255,255,255,.2)'
+        pathColor:mode === 'work' ? '#1e2124' : '#7289da',
+        trailColor:'#424549'
+        
       })} />
 
       <div className="flex m-4">

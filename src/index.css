@@ -3,5 +3,24 @@
 @tailwind utilities;
 
 #root {
-    background-color: gray;
+
+    font-family: 'gg sans SemiBold Regular';
+
 }
+
+
+@font-face {
+    font-family: 'gg sans SemiBold Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('gg sans SemiBold Regular'), url('gg sans Semibold.woff') format('woff');
+    }
+
+    input[type="range"] {
+        -webkit-appearance: none;
+        appearance: none;
+        background: black;
+        border-radius: 50%;
+        cursor: pointer;
+        width: 15rem;
+      }
