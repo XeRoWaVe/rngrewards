@@ -3,10 +3,9 @@ import { streaks } from "../../util";
 
 type Props = {
   streak: number
-  setStreak: React.Dispatch<React.SetStateAction<number>>
 }
 
-const Streak = ({streak, setStreak}: Props) => {
+const Streak = ({streak, }: Props) => {
   const [styledStreak, setStyledStreak] = useState('')
   
    const filteredStreaks = streaks.slice(0, streak) // show streak icons based on how many streaks are set in state

@@ -1,5 +1,4 @@
-import { useEffect, useState, useRef } from "react";
-import Goals from "./Components/Goals/Goals";
+import { useEffect, useState } from "react";
 import Reward from "./Components/Header/Reward";
 import Streak from "./Components/Header/Streak";
 import DarkMode from "./Components/Darkmode/DarkMode";
@@ -43,7 +42,7 @@ function App() {
         <div className="flex justify-center items-center border-black  border-2 relative bg-[#1e2124] rounded-2xl h-24">
           <Reward reward={reward} />
           <div className="absolute top-9 right-0 rounded-2xl">
-            <Streak streak={streak} setStreak={setStreak} />
+            <Streak streak={streak} />
           </div>
         </div>
         <div className="flex justify-center rounded-2xl w-full h-[590px]">
