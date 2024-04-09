@@ -20,6 +20,7 @@ type Streaks = {
 }
 
 
+
 export const timerSettingsContext = createContext<timerContext>({workMinutes: 0, breakMinutes: 0, setWorkMinutes: () => {}, setBreakMinutes: () => {}});
 export const goalsSettingsContext = createContext<goalContext>({goalAmount: 0, setGoalAmount: () => {}});
 

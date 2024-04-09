@@ -1,5 +1,4 @@
-import { useState } from "react";
-import Goal from "./Goal";
+import { useEffect, useState } from "react";
 import GoalsSettingsButton from "./GoalsSettingsButton";
 import { Goaltype, Reward } from "../../App";
 import GoalsSettings from "./GoalsSettings";
@@ -28,22 +27,21 @@ const Goals = ({
   streak,
 }: Props) => {
   const [nameInput, setNameInput] = useState("");
-  const [descriptionInput, setDescriptionInput] = useState("");
-  const [edit, setEdit] = useState(false);
+  const [editName, setEditName] = useState("");
+  const [goalEditing, setGoalEditing] = useState<null | number>(null);
 
   console.log(goals);
-  let nextId = 0;
 
   const removeGoal = (index: number) => {
-    const removedGoal = goals.filter((_, i) => i !== index);
+    const removedGoal = goals.filter((g) => g.id !== index);
     const removedStorage = JSON.parse(localStorage.getItem("goals") || "");
     removedStorage.splice(index, 1);
     localStorage.setItem("goals", JSON.stringify(removedStorage));
     setGoals(removedGoal);
   };
 
-  const completeGoal = async (index: number) => {
-    const completedGoal = goals.filter((_, i) => i !== index);
+  const completeGoal = (index: number) => {
+    const completedGoal = goals.filter((g) => g.id !== index);
     const addStorage = JSON.parse(localStorage.getItem("goals") || "");
     addStorage.splice(index, 1);
     localStorage.setItem("goals", JSON.stringify(addStorage));
@@ -62,34 +60,35 @@ const Goals = ({
   };
 
   const createGoal = () => {
-    if (nameInput && descriptionInput) {
-      setGoals((prev) => [
-        ...prev,
-        {
-          id: nextId++,
-          name: nameInput,
-          description: descriptionInput,
-          done: false,
-        },
-      ]);
+    if (nameInput) {
+      const newGoal = {
+        id: new Date().getTime(),
+        name: nameInput,
+        done: false,
+      };
+
+      setGoals((prev) => [...prev, newGoal]);
       setNameInput("");
-      setDescriptionInput("");
+
     }
   };
 
-  const handleUpdateGoal = (id: number, name: string, description: string) => {
-    if (!name && !description) {
+  const handleUpdateGoal = (id: number, name: string) => {
+    if (!name) {
       return;
     }
     const updatedGoals = goals.map((e) => {
       if (e.id === id) {
         e.name = name;
-        e.description = description;
       }
       return e;
     });
     setGoals(updatedGoals);
   };
+
+  useEffect(() => {
+    setEditName("");
+  }, [goalEditing]);
 
   return (
     <>
@@ -111,14 +110,24 @@ const Goals = ({
                 value={nameInput}
                 placeholder="Enter goal name here"
                 onChange={(e) => setNameInput(e.currentTarget.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    createGoal();
+                  }
+                }}
               />
-              <input
+              {/* <input
                 className="text-black m-2 w-fit"
                 type="text"
                 value={descriptionInput}
                 placeholder="Enter description here.."
                 onChange={(e) => setDescriptionInput(e.currentTarget.value)}
-              />
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    createGoal();
+                  }
+                }}
+              /> */}
               <button
                 className="border-2 shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-4 active:shadow-inner hover:bg-[#7289da] active:border-2"
                 onClick={createGoal}
@@ -129,21 +138,83 @@ const Goals = ({
           )}
           {!!goals.length &&
             goals
-              .map((goal, i) => (
-                <div className="w-full m-4">
-                  <Goal
-                    name={goal.name}
-                    id={i}
-                    description={goal.description}
-                    done={goal.done}
-                    edit={edit}
-                    updateGoal={handleUpdateGoal}
-                    removeGoal={removeGoal}
-                    setEdit={setEdit}
-                    completeGoal={completeGoal}
-                  />
-                  {/* <button className="border-2 absolute right-24 shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-4 active:shadow-inner hover:bg-[#7289da] active:border-2" onClick={() => setEdit(!edit)}>Edit</button>
-            <button className="border-2 absolute right-0  shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-3 active:shadow-inner hover:bg-[#7289da] active:border-2" onClick={() => completeGoal(i)}>Complete</button> */}
+              .map((goal) => (
+                <div key={goal.id} className="w-full m-8 ">
+                  {goalEditing === goal.id ? (
+                    <div
+                      key={goal.id}
+                      className={`relative w-full bg-[#424549] shadow-black shadow-inner p-1 flex justify-center`}
+                    >
+                        <input
+                          className={`text-white text-lg m-1 p-1 bg-[#424549] shadow-black shadow-inner w-[95%]`}
+                          value={editName}
+                          type="text"
+                          placeholder={goal.name}
+                          onChange={(e) => setEditName(e.currentTarget.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              handleUpdateGoal(goal.id, editName);
+                              setGoalEditing(null);
+                            }
+                          }}
+                        />
+                        {/* <input
+                          className="text-white text-md bg-[#424549] shadow-black shadow-inner w-full"
+                          value={editDesc}
+                          type="text"
+                          placeholder={goal.description}
+                          onChange={(e) => setEditDesc(e.currentTarget.value)}
+                          
+                        /> */}
+                     
+                      <button
+                        className="border-2 absolute right-16 -bottom-10 shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-4 active:shadow-inner hover:bg-[#7289da] active:border-2"
+                        onClick={() => {
+                          handleUpdateGoal(goal.id, editName),
+                            setGoalEditing(null);
+                        }}
+                      >
+                        Update
+                      </button>
+                      <button
+                        className="border-2 absolute -right-4 -bottom-10 shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-3 active:shadow-inner hover:bg-[#7289da] active:border-2"
+                        onClick={() => {
+                          removeGoal(goal.id), setGoalEditing(null);
+                        }}
+                      >
+                        Remove
+                      </button>
+                      <button
+                        className="border-2 absolute right-[9.4rem] -bottom-10 shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-3 active:shadow-inner hover:bg-[#7289da] active:border-2"
+                        onClick={() => setGoalEditing(null)}
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  ) : (
+                    <div className={`p-2 relative bg-[#424549] shadow-black shadow-md`}>
+                      <h1 className={`bg-[#424549] shadow-black p-1 shadow-md w-[99%] flex justify-center`}>
+                        {goal.name}
+                      </h1>
+                      {/* <p className="bg-[#424549] shadow-black shadow-inner w-full">
+                        Description: {goal.description}
+                      </p> */}
+                      <button
+                        className="border-2 absolute right-20 -bottom-10 shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-4 active:shadow-inner hover:bg-[#7289da] active:border-2"
+                        onClick={() => {
+                          setGoalEditing(goal.id);
+                        }}
+                      >
+                        Edit
+                      </button>
+                      <button
+                        className="border-2 absolute -right-4 -bottom-10 shadow-md shadow-black border-black hover:-translate-y-0.5 active:translate-y-0 active:bg-[#4f5f98] rounded-lg px-3 active:shadow-inner hover:bg-[#7289da] active:border-2"
+                        onClick={() => completeGoal(goal.id)}
+                      >
+                        Complete
+                      </button>
+                    </div>
+                  )}
                 </div>
               ))
               .slice(0, goalAmount)}

@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { Goaltype } from "../../App";
 
 type Props = {
   name: string;

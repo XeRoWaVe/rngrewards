@@ -13,7 +13,6 @@ export type Theme = 'light' | 'dark'
 export type Goaltype = {
   id: number
   name: string
-  description: string
   done: boolean
 }
 
