@@ -19,7 +19,6 @@ export type Goaltype = {
 function App() {
   const [reward, setReward] = useState<Reward>(null);
   const [streak, setStreak] = useState(0);
-  const [theme, setTheme] = useState<Theme>('light')
   // const [extraBreak, setExtraBreak] = useState(false)
 
   useEffect(() => {
@@ -38,6 +37,7 @@ function App() {
       <div
         className="m-auto absolute inset-1/4 bg- rounded-2xl  h-fit"
       >
+        {/* <p className="flex justify-center text-white font-bold text-3xl">╰(*°▽°*)╯Random Intermittent Dopaminergic Rewards ╰(*°▽°*)╯</p> */}
         <div className="flex justify-center items-center border-black  border-2 relative bg-[#1e2124] rounded-2xl h-24">
           <Reward reward={reward} />
           <div className="absolute top-9 right-0 rounded-2xl">
@@ -53,7 +53,6 @@ function App() {
           </div>
         </div>
         <div className="flex justify-center font-bold rounded-2xl items-center">
-          <DarkMode setTheme={setTheme} theme={theme} />
           <button onClick={clearLocalStorage}>clear</button>
         </div>
       </div>

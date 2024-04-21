@@ -134,6 +134,9 @@ const Goals = ({
               >
                 Create goal
               </button>
+              <div className="">
+            <GoalsSettingsButton setShowGoalsSettings={setShowGoalsSettings} />
+          </div>
             </>
           )}
           {!!goals.length &&
@@ -219,9 +222,7 @@ const Goals = ({
               ))
               .slice(0, goalAmount)}
 
-          <div className="">
-            <GoalsSettingsButton setShowGoalsSettings={setShowGoalsSettings} />
-          </div>
+          
         </div>
       )}
     </>
